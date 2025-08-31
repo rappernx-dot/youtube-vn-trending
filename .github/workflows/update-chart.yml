@@ -2,7 +2,7 @@ name: Update YouTube VN Chart
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC (7:00 AM Vietnam time)
+    - cron: '0 */6 * * *'  # Runs daily at 00:00 UTC (7:00 AM Vietnam time)
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
