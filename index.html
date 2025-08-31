@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Vietnam Daily Trending</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="root" class="container mx-auto p-4"></div>
+    <script type="text/babel">
+        function ChartTable() {
+            const [chart, setChart] = React.useState({ last_updated: "Loading...", data: [] });
+
+            React.useEffect(() => {
+                // Fetch the JSON data
+                fetch('./youtube_vn_daily.json')
+                    .then(response => response.json())
+                    .then(setChart)
+                    .catch(error => console.error('Error fetching data:', error));
+            }, []);
+
+            return (
+                <div className="bg-white shadow-md rounded-lg p-6">
+                    <h1 className="text-2xl font-bold mb-4">YouTube Vietnam Daily Trending Chart</h1>
+                    <p className="text-gray-600 mb-4">Showing streams in the past two days. Last updated: {chart.last_updated}</p>
+                    <table className="w-full border-collapse">
+                        <thead>
+                            <tr className="bg-gray-200">
+                                <th className="p-2 text-left">Pos</th>
+                                <th className="p-2 text-left">P+</th>
+                                <th className="p-2 text-left">Track</th>
+                                <th className="p-2 text-left">Streams</th>
+                                <th className="p-2 text-left">Streams+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {chart.data.map((item, index) => (
+                                <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+                                    <td className="p-2">{item.position}</td>
+                                    <td className="p-2">{item.position_change}</td>
+                                    <td className="p-2">{item.track}</td>
+                                    <td className="p-2">{item.streams}</td>
+                                    <td className="p-2">{item.streams_change}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ChartTable />, document.getElementById('root'));
+    </script>
+</body>
+</html>
