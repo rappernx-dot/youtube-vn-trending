@@ -13,7 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <div id="root" class="container mx-auto p-4"></div>
+    <div id="root" class="container mx-auto p-6"></div>
     <script type="text/babel">
         function ChartTable() {
             const [chart, setChart] = React.useState({ chart_date: "Đang tải...", last_updated: "Đang tải...", note: "", affiliate_link: "", data: [] });
@@ -66,7 +66,7 @@
             if (error) {
                 return (
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam</h1>
+                        <h1 className="text-3xl font-bold mb-4 text-gray-800">Youtube Trending Việt Nam</h1>
                         <p className="text-red-500">{error}</p>
                     </div>
                 );
@@ -74,38 +74,57 @@
 
             return (
                 <div className="bg-white shadow-md rounded-lg p-6">
-                    <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam - {chart.chart_date}</h1>
+                    <h1 className="text-3xl font-bold mb-4 text-gray-800">Youtube Trending Việt Nam - {chart.chart_date}</h1>
                     <p className="text-gray-600 mb-2">{chart.note}</p>
-                    <p className="text-gray-600 mb-4">Cập nhật lần cuối: {chart.last_updated}</p>
+                    <p className="text-gray-600 mb-6">Cập nhật lần cuối: {chart.last_updated}</p>
                     {chart.data.length === 0 && !error && (
                         <p className="text-gray-600">Đang tải dữ liệu...</p>
                     )}
                     {chart.data.length > 0 && (
                         <table className="w-full border-collapse">
                             <thead>
-                                <tr className="bg-gray-200">
-                                    <th className="p-2 text-left">VT</th>
-                                    <th className="p-2 text-left">TĐ</th>
-                                    <th className="p-2 text-left">Bài hát</th>
-                                    <th className="p-2 text-right">Lượt nghe</th>
-                                    <th className="p-2 text-right">TĐLN</th>
+                                <tr className="bg-gray-200 text-gray-700">
+                                    <th className="p-3 text-left w-12">VT</th>
+                                    <th className="p-3 text-left w-16">TĐ</th>
+                                    <th className="p-3 text-left w-24">Thumbnail</th>
+                                    <th className="p-3 text-left">Bài hát</th>
+                                    <th className="p-3 text-right w-32">Tổng Lượt Xem</th>
+                                    <th className="p-3 text-right w-32">Lượt nghe</th>
+                                    <th className="p-3 text-right w-32">TĐLN</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {chart.data.map((item, index) => (
-                                    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-                                        <td className="p-2">{item.position}</td>
-                                        <td className="p-2">{item.position_change}</td>
-                                        <td className="p-2">
-                                            <span 
-                                                onClick={() => handleTrackClick(item.youtube_link, chart.affiliate_link || item.affiliate_link)} 
+                                    <tr key={index} className={`hover:bg-gray-100 ${index % 2 === 0 ? 'bg-gray-50' : ''}`}>
+                                        <td className="p-3">{item.position}</td>
+                                        <td className="p-3">{item.position_change}</td>
+                                        <td className="p-3">
+                                            {item.thumbnail_url ? (
+                                                <div
+                                                    onClick={() => handleTrackClick(item.youtube_link, item.affiliate_link)}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <img
+                                                        src={item.thumbnail_url}
+                                                        alt={item.track}
+                                                        className="w-24 h-16 object-cover rounded"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="w-24 h-16 bg-gray-200 rounded"></div>
+                                            )}
+                                        </td>
+                                        <td className="p-3">
+                                            <span
+                                                onClick={() => handleTrackClick(item.youtube_link, item.affiliate_link)}
                                                 className="cursor-pointer text-blue-500 hover:underline"
                                             >
                                                 {item.track}
                                             </span>
                                         </td>
-                                        <td className="p-2 text-right">{parseInt(item.streams).toLocaleString('vi-VN')}</td>
-                                        <td className={`p-2 text-right ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '' ? 'text-gray-500' : 'text-green-500'}`}>
+                                        <td className="p-3 text-right">{parseInt(item.view_count).toLocaleString('vi-VN')}</td>
+                                        <td className="p-3 text-right">{parseInt(item.streams).toLocaleString('vi-VN')}</td>
+                                        <td className={`p-3 text-right ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '' ? 'text-gray-500' : 'text-green-500'}`}>
                                             {formatNumber(item.streams_change)}
                                         </td>
                                     </tr>
