@@ -13,7 +13,7 @@
     <div id="root" class="container mx-auto p-4"></div>
     <script type="text/babel">
         function ChartTable() {
-            const [chart, setChart] = React.useState({ last_updated: "Loading...", data: [] });
+            const [chart, setChart] = React.useState({ chart_date: "Loading...", last_updated: "Loading...", note: "", data: [] });
 
             React.useEffect(() => {
                 // Fetch the JSON data
@@ -23,10 +23,18 @@
                     .catch(error => console.error('Error fetching data:', error));
             }, []);
 
+            const formatNumber = (numStr) => {
+                if (!numStr) return '';
+                const sign = numStr[0] === '-' || numStr[0] === '+' ? numStr[0] : '';
+                const num = parseInt(numStr.replace(/[+-]/, ''));
+                return sign + num.toLocaleString('en-US');
+            };
+
             return (
                 <div className="bg-white shadow-md rounded-lg p-6">
-                    <h1 className="text-2xl font-bold mb-4">YouTube Vietnam Daily Trending Chart</h1>
-                    <p className="text-gray-600 mb-4">Showing streams in the past two days. Last updated: {chart.last_updated}</p>
+                    <h1 className="text-2xl font-bold mb-4">YouTube Vietnam Daily Trending Chart - {chart.chart_date}</h1>
+                    <p className="text-gray-600 mb-2">{chart.note}</p>
+                    <p className="text-gray-600 mb-4">Last updated: {chart.last_updated}</p>
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="bg-gray-200">
@@ -43,8 +51,10 @@
                                     <td className="p-2">{item.position}</td>
                                     <td className="p-2">{item.position_change}</td>
                                     <td className="p-2">{item.track}</td>
-                                    <td className="p-2">{item.streams}</td>
-                                    <td className="p-2">{item.streams_change}</td>
+                                    <td className="p-2">{parseInt(item.streams).toLocaleString('en-US')}</td>
+                                    <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}>
+                                        {formatNumber(item.streams_change)}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
