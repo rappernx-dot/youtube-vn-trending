@@ -3,52 +3,62 @@ from bs4 import BeautifulSoup
 import json
 import os
 from datetime import datetime
-import re
+import urllib.parse
 import time
+
+# YouTube Data API key (set in GitHub Actions secrets)
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
+if not YOUTUBE_API_KEY:
+    print("Error: YOUTUBE_API_KEY environment variable not set")
 
 # URL of the YouTube Vietnam Daily Chart
 url = "https://kworb.net/youtube/insights/vn_daily.html"
 
 try:
     # Send a GET request with headers to ensure proper encoding
-    headers = {'Accept-Language': 'en-US,en;q=0.9', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+    headers = {
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    print("Fetching chart data from:", url)
     response = requests.get(url, timeout=10, headers=headers)
-    response.raise_for_status()  # Raise error if request fails
-    response.encoding = 'utf-8'  # Force UTF-8 encoding
-    soup = BeautifulSoup(response.text, "html.parser", from_encoding="utf-8")
+    response.raise_for_status()
+    response.encoding = 'utf-8'
+    soup = BeautifulSoup(response.text, "html.parser")
 
-    # Extract chart date from page title (e.g., "YouTube Vietnam Daily Chart - 2025/08/28 | Weekly")
+    # Extract chart date
     title_span = soup.find("span", class_="pagetitle")
     chart_title = title_span.find("strong").text if title_span else "YouTube Vietnam Daily Chart"
     chart_date_raw = chart_title.split("-")[1].strip().split(" |")[0] if len(chart_title.split("-")) > 1 else "Unknown"
-    # Convert date to a readable format (e.g., "28/08/2025")
     try:
         chart_date = datetime.strptime(chart_date_raw, "%Y/%m/%d").strftime("%d/%m/%Y")
+        print(f"Chart date parsed: {chart_date}")
     except ValueError:
-        chart_date = chart_date_raw  # Fallback if date parsing fails
+        chart_date = chart_date_raw
+        print(f"Chart date fallback: {chart_date}")
 
-    # Extract note (e.g., "Showing streams in the past two days.")
-    note_element = title_span.next_sibling.next_sibling  # Assuming structure: <br><br>Showing...<br><br>
+    # Extract note
+    note_element = title_span.next_sibling.next_sibling
     note = note_element.strip() if note_element and "Showing" in note_element else "Hiển thị lượt nghe trong hai ngày qua."
+    print(f"Note extracted: {note}")
 
-    # Find the table with id="dailytable"
+    # Find the table
     table = soup.find("table", id="dailytable")
-
-    # Initialize a list to store the chart data
+    if not table:
+        raise ValueError("Table with id='dailytable' not found")
+    
+    # Initialize chart data
     chart_data = []
-
-    # Extract table rows (skip the header)
     rows = table.find("tbody").find_all("tr")
+    print(f"Found {len(rows)} rows in the chart table")
     for row in rows:
         cols = row.find_all("td")
-        # Extract data from each column
         position = cols[0].text.strip()
         position_change = cols[1].text.strip()
         track = cols[2].text.strip()
         streams = cols[3].text.strip().replace(",", "")
         streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else ""
-
-        # Append to chart_data (temporarily without youtube_link)
+        print(f"Extracted track: {track} (Position: {position})")
         chart_data.append({
             "position": position,
             "position_change": position_change,
@@ -56,29 +66,34 @@ try:
             "streams": streams,
             "streams_change": streams_change,
             "youtube_link": "",
-            "affiliate_link": ""  # Placeholder for affiliate link; set to your affiliate URL if available
+            "affiliate_link": ""
         })
 
-    # Now, for each track, search YouTube for the first video link
+    # Search YouTube using API
     for item in chart_data:
-        query = item['track'].replace(" ", "+")
-        search_url = f"https://www.youtube.com/results?search_query={query}"
-        search_response = requests.get(search_url, headers=headers, timeout=10)
-        search_response.encoding = 'utf-8'
-        search_soup = BeautifulSoup(search_response.text, "html.parser")
-
-        # Find the first <a> with href starting with "/watch?v="
-        video_links = search_soup.find_all("a", href=re.compile(r"^/watch\?v="))
-        if video_links:
-            first_href = video_links[0]['href']
-            item['youtube_link'] = "https://www.youtube.com" + first_href
-
-        # Optional: Set affiliate_link here if you have a logic for it (e.g., a fixed link or search for one)
-        # For example: item['affiliate_link'] = "https://example.com/aff?track=" + item['track'].replace(" ", "%20")
-        # Currently left as ""
-
-        # Sleep to avoid rate limiting
-        time.sleep(1)  # 1 second delay between searches
+        query = urllib.parse.quote(item['track'])
+        print(f"Searching YouTube API for: {item['track']} (Encoded query: {query})")
+        try:
+            api_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&maxResults=1&key={YOUTUBE_API_KEY}"
+            print(f"API request URL: {api_url}")
+            api_response = requests.get(api_url, timeout=10)
+            print(f"YouTube API status code: {api_response.status_code}")
+            if api_response.status_code != 200:
+                print(f"API error response: {api_response.text}")
+                continue
+            data = api_response.json()
+            if data.get('items'):
+                video_id = data['items'][0]['id']['videoId']
+                item['youtube_link'] = f"https://www.youtube.com/watch?v={video_id}"
+                print(f"Found YouTube link: {item['youtube_link']}")
+            else:
+                print(f"No video found for: {item['track']}")
+            # Placeholder for affiliate link
+            # Example: item['affiliate_link'] = f"https://example.com/aff?track={urllib.parse.quote(item['track'])}"
+            print(f"Affiliate link (placeholder): {item['affiliate_link']}")
+            time.sleep(0.5)  # Delay to respect API rate limits
+        except Exception as e:
+            print(f"Error searching YouTube API for '{item['track']}': {str(e)}")
 
     # Save the data to a JSON file
     with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
@@ -91,5 +106,4 @@ try:
 
     print("Data crawled and saved to youtube_vn_daily.json")
 except Exception as e:
-    print(f"Error during crawl: {e}")
-    # Optionally, keep old data or notify
+    print(f"Error during crawl: {str(e)}")
