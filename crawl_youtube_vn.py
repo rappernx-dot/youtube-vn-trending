@@ -13,7 +13,7 @@ try:
     response = requests.get(url, timeout=10, headers=headers)
     response.raise_for_status()  # Raise error if request fails
     response.encoding = 'utf-8'  # Force UTF-8 encoding
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(response.text, "html.parser", from_encoding="utf-8")
 
     # Extract chart date from page title (e.g., "YouTube Vietnam Daily Chart - 2025/08/28 | Weekly")
     title_span = soup.find("span", class_="pagetitle")
@@ -44,8 +44,8 @@ try:
         position_change = cols[1].text.strip()
         track = cols[2].text.strip()
         streams = cols[3].text.strip().replace(",", "")
-        streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else "0"
-        
+        streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else ""
+
         # Append to chart_data
         chart_data.append({
             "position": position,
@@ -56,7 +56,7 @@ try:
         })
 
     # Save the data to a JSON file
-    with open recuerdo_vn_daily.json", "w", encoding="utf-8") as f:
+    with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
         json.dump({
             "chart_date": chart_date,
             "last_updated": response.headers.get("Date", "Unknown"),
