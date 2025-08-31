@@ -1,147 +1,187 @@
 {
-  "chart_date": "28 August 2025",
-  "last_updated": "Sun, 31 Aug 2025 03:20:54 GMT",
-  "note": "Showing streams in the past two days.",
+  "chart_date": "28/08/2025",
+  "last_updated": "Sun, 31 Aug 2025 03:46:36 GMT",
+  "note": "Hiển thị lượt nghe trong hai ngày qua.",
   "data": [
     {
       "position": "1",
       "position_change": "=",
       "track": "Hòa Minzy - Nỗi Đau Giữa Hòa Bình",
       "streams": "2217225",
-      "streams_change": "-50883"
+      "streams_change": "-50883",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "2",
       "position_change": "=",
       "track": "Nguyễn Hùng - Còn Gì Đẹp Hơn (Mưa Đỏ Original Soundtrack)",
       "streams": "2058733",
-      "streams_change": "+89735"
+      "streams_change": "+89735",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "3",
       "position_change": "=",
       "track": "EM XINH \"SAY HI\" - ẾCH NGOÀI ĐÁY GIẾNG",
       "streams": "1883633",
-      "streams_change": "-3703"
+      "streams_change": "-3703",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "4",
       "position_change": "+1",
       "track": "A2O - B.B.B (Bigger Badder Better) (English Ver.)",
       "streams": "1338720",
-      "streams_change": "+331182"
+      "streams_change": "+331182",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "5",
       "position_change": "-1",
       "track": "(S)TRONG - Kho Báu",
       "streams": "1196699",
-      "streams_change": "+388"
+      "streams_change": "+388",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "6",
       "position_change": "=",
       "track": "Dương Ái Vy - Muốn Cua Anh Làm Bồ",
       "streams": "931767",
-      "streams_change": "-32101"
+      "streams_change": "-32101",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "7",
       "position_change": "+1",
       "track": "AtHeart - Plot Twist",
       "streams": "719613",
-      "streams_change": "-30429"
+      "streams_change": "-30429",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "8",
       "position_change": "+1",
       "track": "Nguyen Van Chung - Viết Tiếp Câu Chuyện Hòa Bình",
       "streams": "682837",
-      "streams_change": "+40601"
+      "streams_change": "+40601",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "9",
       "position_change": "-2",
       "track": "Jackson Wang - Made Me a Man",
       "streams": "636812",
-      "streams_change": "-248019"
+      "streams_change": "-248019",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "10",
       "position_change": "=",
       "track": "MAYDAYs - Phép Màu (Đàn Cá Gỗ Original Soundtrack)",
       "streams": "631961",
-      "streams_change": "+1195"
+      "streams_change": "+1195",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "11",
       "position_change": "=",
       "track": "Hòa Minzy - Bắc Bling (Bắc Ninh)",
       "streams": "625334",
-      "streams_change": "-1323"
+      "streams_change": "-1323",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "12",
       "position_change": "+1",
       "track": "Nguyễn Hữu Kha - Nắng Dưới Chân Mây (LD Remix)",
       "streams": "518360",
-      "streams_change": "+19310"
+      "streams_change": "+19310",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "13",
       "position_change": "+3",
       "track": "IVE - XOXZ",
       "streams": "512603",
-      "streams_change": "+57761"
+      "streams_change": "+57761",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "14",
       "position_change": "=",
       "track": "Anh Quân Idol - E Là Không Thể (Chốn Tìm Show)",
       "streams": "494550",
-      "streams_change": "+838"
+      "streams_change": "+838",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "15",
       "position_change": "=",
       "track": "Quang Dang Tran - Anh Đã Không Biết Cách Yêu Em",
       "streams": "490658",
-      "streams_change": "+1517"
+      "streams_change": "+1517",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "16",
       "position_change": "-4",
       "track": "TREASURE - Magic Dance (The Labyrinth)",
       "streams": "417460",
-      "streams_change": "-100267"
+      "streams_change": "-100267",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "17",
       "position_change": "=",
       "track": "HUNTR/X - Golden",
       "streams": "377099",
-      "streams_change": "+7476"
+      "streams_change": "+7476",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "18",
       "position_change": "NEW",
       "track": "EM XINH \"SAY HI\" - GÃ SĂN CÁ",
       "streams": "333318",
-      "streams_change": ""
+      "streams_change": "",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "19",
       "position_change": "+1",
       "track": "RPT MCK - 2323 - MCK",
       "streams": "332332",
-      "streams_change": "-10225"
+      "streams_change": "-10225",
+      "youtube_link": "",
+      "affiliate_link": ""
     },
     {
       "position": "20",
       "position_change": "NEW",
       "track": "Phạm Kỳ - Anh Vui (Remix) (feat. H2O Vinahouse & Natas Remix)",
       "streams": "331084",
-      "streams_change": ""
+      "streams_change": "",
+      "youtube_link": "",
+      "affiliate_link": ""
     }
   ]
 }
