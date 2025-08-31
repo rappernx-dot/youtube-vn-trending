@@ -10,6 +10,7 @@ import time
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
 if not YOUTUBE_API_KEY:
     print("Error: YOUTUBE_API_KEY environment variable not set")
+    exit(1)
 
 # URL of the YouTube Vietnam Daily Chart
 url = "https://kworb.net/youtube/insights/vn_daily.html"
@@ -66,6 +67,8 @@ try:
             "streams": streams,
             "streams_change": streams_change,
             "youtube_link": "",
+            "thumbnail_url": "",  # New field for thumbnail
+            "view_count": "",     # New field for total view count
             "affiliate_link": ""
         })
 
@@ -74,18 +77,43 @@ try:
         query = urllib.parse.quote(item['track'])
         print(f"Searching YouTube API for: {item['track']} (Encoded query: {query})")
         try:
-            api_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&maxResults=1&key={YOUTUBE_API_KEY}"
-            print(f"API request URL: {api_url}")
-            api_response = requests.get(api_url, timeout=10)
-            print(f"YouTube API status code: {api_response.status_code}")
-            if api_response.status_code != 200:
-                print(f"API error response: {api_response.text}")
+            # Step 1: Search for the video to get the video ID
+            search_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&maxResults=1&key={YOUTUBE_API_KEY}"
+            print(f"API search URL: {search_url}")
+            search_response = requests.get(search_url, timeout=10)
+            print(f"YouTube API search status code: {search_response.status_code}")
+            if search_response.status_code != 200:
+                print(f"API search error response: {search_response.text}")
                 continue
-            data = api_response.json()
-            if data.get('items'):
-                video_id = data['items'][0]['id']['videoId']
+            search_data = search_response.json()
+            if search_data.get('items'):
+                video_id = search_data['items'][0]['id']['videoId']
                 item['youtube_link'] = f"https://www.youtube.com/watch?v={video_id}"
                 print(f"Found YouTube link: {item['youtube_link']}")
+
+                # Step 2: Fetch video details (thumbnail and view count)
+                video_url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id={video_id}&key={YOUTUBE_API_KEY}"
+                print(f"API video details URL: {video_url}")
+                video_response = requests.get(video_url, timeout=10)
+                print(f"YouTube API video details status code: {video_response.status_code}")
+                if video_response.status_code != 200:
+                    print(f"API video details error response: {video_response.text}")
+                    continue
+                video_data = video_response.json()
+                if video_data.get('items'):
+                    # Extract thumbnail (prefer high, fallback to medium or default)
+                    thumbnails = video_data['items'][0]['snippet']['thumbnails']
+                    item['thumbnail_url'] = (
+                        thumbnails.get('high', {}).get('url') or
+                        thumbnails.get('medium', {}).get('url') or
+                        thumbnails.get('default', {}).get('url', '')
+                    )
+                    # Extract total view count
+                    item['view_count'] = video_data['items'][0]['statistics'].get('viewCount', '0')
+                    print(f"Thumbnail URL: {item['thumbnail_url']}")
+                    print(f"Total view count: {item['view_count']}")
+                else:
+                    print(f"No video details found for video ID: {video_id}")
             else:
                 print(f"No video found for: {item['track']}")
             # Placeholder for affiliate link
