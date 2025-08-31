@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Vietnam Daily Trending</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Youtube Trending Việt Nam</title>
     <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
@@ -13,52 +16,87 @@
     <div id="root" class="container mx-auto p-4"></div>
     <script type="text/babel">
         function ChartTable() {
-            const [chart, setChart] = React.useState({ chart_date: "Loading...", last_updated: "Loading...", note: "", data: [] });
+            const [chart, setChart] = React.useState({ chart_date: "Đang tải...", last_updated: "Đang tải...", note: "", data: [] });
+            const [error, setError] = React.useState(null);
 
             React.useEffect(() => {
-                // Fetch the JSON data
-                fetch('./youtube_vn_daily.json')
-                    .then(response => response.json())
-                    .then(setChart)
-                    .catch(error => console.error('Error fetching data:', error));
+                const fetchData = async (attempt = 1, maxAttempts = 3) => {
+                    try {
+                        // Add cache-busting query parameter
+                        const timestamp = new Date().getTime();
+                        const url = `./youtube_vn_daily.json?t=${timestamp}`;
+                        console.log(`Đang tải ${url}, lần thử ${attempt}`);
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        console.log('Tải dữ liệu thành công:', data);
+                        setChart(data);
+                        setError(null);
+                    } catch (err) {
+                        console.error('Lỗi tải dữ liệu:', err.message);
+                        if (attempt < maxAttempts) {
+                            console.log(`Thử lại... (${attempt + 1}/${maxAttempts})`);
+                            setTimeout(() => fetchData(attempt + 1, maxAttempts), 1000);
+                        } else {
+                            setError('Không tải được dữ liệu. Vui lòng thử lại sau.');
+                        }
+                    }
+                };
+                fetchData();
             }, []);
 
             const formatNumber = (numStr) => {
                 if (!numStr) return '';
                 const sign = numStr[0] === '-' || numStr[0] === '+' ? numStr[0] : '';
                 const num = parseInt(numStr.replace(/[+-]/, ''));
-                return sign + num.toLocaleString('en-US');
+                return sign + num.toLocaleString('vi-VN');
             };
+
+            if (error) {
+                return (
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam</h1>
+                        <p className="text-red-500">{error}</p>
+                    </div>
+                );
+            }
 
             return (
                 <div className="bg-white shadow-md rounded-lg p-6">
-                    <h1 className="text-2xl font-bold mb-4">YouTube Vietnam Daily Trending Chart - {chart.chart_date}</h1>
+                    <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam - {chart.chart_date}</h1>
                     <p className="text-gray-600 mb-2">{chart.note}</p>
-                    <p className="text-gray-600 mb-4">Last updated: {chart.last_updated}</p>
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="bg-gray-200">
-                                <th className="p-2 text-left">Pos</th>
-                                <th className="p-2 text-left">P+</th>
-                                <th className="p-2 text-left">Track</th>
-                                <th className="p-2 text-left">Streams</th>
-                                <th className="p-2 text-left">Streams+</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {chart.data.map((item, index) => (
-                                <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-                                    <td className="p-2">{item.position}</td>
-                                    <td className="p-2">{item.position_change}</td>
-                                    <td className="p-2">{item.track}</td>
-                                    <td className="p-2">{parseInt(item.streams).toLocaleString('en-US')}</td>
-                                    <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '' ? 'text-gray-500' : 'text-green-500'}`}>
-                                        {formatNumber(item.streams_change)}
-                                    </td>
+                    <p className="text-gray-600 mb-4">Cập nhật lần cuối: {chart.last_updated}</p>
+                    {chart.data.length === 0 && !error && (
+                        <p className="text-gray-600">Đang tải dữ liệu...</p>
+                    )}
+                    {chart.data.length > 0 && (
+                        <table className="w-full border-collapse">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="p-2 text-left">VT</th>
+                                    <th className="p-2 text-left">TĐ</th>
+                                    <th className="p-2 text-left">Bài hát</th>
+                                    <th className="p-2 text-left">Lượt nghe</th>
+                                    <th className="p-2 text-left">TĐLN</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {chart.data.map((item, index) => (
+                                    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+                                        <td className="p-2">{item.position}</td>
+                                        <td className="p-2">{item.position_change}</td>
+                                        <td className="p-2">{item.track}</td>
+                                        <td className="p-2">{parseInt(item.streams).toLocaleString('vi-VN')}</td>
+                                        <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '' ? 'text-gray-500' : 'text-green-500'}`}>
+                                            {formatNumber(item.streams_change)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             );
         }
