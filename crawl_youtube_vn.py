@@ -12,6 +12,15 @@ try:
     response.raise_for_status()  # Raise error if request fails
     soup = BeautifulSoup(response.text, "html.parser")
 
+    # Extract chart date from page title
+    title_span = soup.find("span", class_="pagetitle")
+    chart_title = title_span.find("strong").text if title_span else "YouTube Vietnam Daily Chart"
+    chart_date = chart_title.split("-")[1].strip().split(" |")[0] if len(chart_title.split("-")) > 1 else "Unknown"
+
+    # Extract note (e.g., "Showing streams in the past two days.")
+    note_element = title_span.next_sibling.next_sibling  # Assuming structure: <br><br>Showing...<br><br>
+    note = note_element.strip() if note_element and "Showing" in note_element else "Showing streams in the past two days."
+
     # Find the table with id="dailytable"
     table = soup.find("table", id="dailytable")
 
@@ -27,7 +36,7 @@ try:
         position_change = cols[1].text.strip()
         track = cols[2].text.strip()
         streams = cols[3].text.strip().replace(",", "")
-        streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else "0"
+        streams_change = cols[4].text.strip().replace(",", "")  # Keep as is, including sign or empty
         
         # Append to chart_data
         chart_data.append({
@@ -41,7 +50,9 @@ try:
     # Save the data to a JSON file
     with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
         json.dump({
+            "chart_date": chart_date,
             "last_updated": response.headers.get("Date", "Unknown"),
+            "note": note,
             "data": chart_data
         }, f, ensure_ascii=False, indent=2)
 
