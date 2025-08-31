@@ -25,8 +25,17 @@ jobs:
       - name: Run crawler script
         run: python crawl_youtube_vn.py
         env:
-          YOUTUBE_API_KEY: ${{ AIzaSyB_J4flPj2Vvrci3h5QK8ivO6yJGDYuPuA }}
-        
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: Verify JSON file
+        run: |
+          if [ -f youtube_vn_daily.json ]; then
+            echo "JSON file exists. Contents:"
+            cat youtube_vn_daily.json
+          else
+            echo "Error: youtube_vn_daily.json not found"
+            exit 1
+          fi
 
       - name: Commit and push updated JSON
         run: |
