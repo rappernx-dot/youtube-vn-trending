@@ -32,3 +32,9 @@ jobs:
           git add youtube_vn_daily.json
           git commit -m "Automated update: YouTube VN Daily Chart" || echo "No changes to commit"
           git push
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
