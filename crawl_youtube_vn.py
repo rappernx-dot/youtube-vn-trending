@@ -3,10 +3,13 @@ from bs4 import BeautifulSoup
 import json
 import os
 from datetime import datetime
+import urllib.parse
 import time
 
 # YouTube Data API key (set in GitHub Actions secrets)
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "YOUR_API_KEY_HERE")  # Replace with your key or use env variable
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
+if not YOUTUBE_API_KEY:
+    print("Error: YOUTUBE_API_KEY environment variable not set")
 
 # URL of the YouTube Vietnam Daily Chart
 url = "https://kworb.net/youtube/insights/vn_daily.html"
@@ -43,7 +46,7 @@ try:
     table = soup.find("table", id="dailytable")
     if not table:
         raise ValueError("Table with id='dailytable' not found")
-
+    
     # Initialize chart data
     chart_data = []
     rows = table.find("tbody").find_all("tr")
@@ -68,23 +71,29 @@ try:
 
     # Search YouTube using API
     for item in chart_data:
-        query = item['track']
-        print(f"Searching YouTube API for: {query}")
+        query = urllib.parse.quote(item['track'])
+        print(f"Searching YouTube API for: {item['track']} (Encoded query: {query})")
         try:
             api_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&maxResults=1&key={YOUTUBE_API_KEY}"
+            print(f"API request URL: {api_url}")
             api_response = requests.get(api_url, timeout=10)
-            api_response.raise_for_status()
             print(f"YouTube API status code: {api_response.status_code}")
+            if api_response.status_code != 200:
+                print(f"API error response: {api_response.text}")
+                continue
             data = api_response.json()
             if data.get('items'):
                 video_id = data['items'][0]['id']['videoId']
                 item['youtube_link'] = f"https://www.youtube.com/watch?v={video_id}"
                 print(f"Found YouTube link: {item['youtube_link']}")
             else:
-                print(f"No video found for: {query}")
-            time.sleep(0.5)  # Reduced delay for API (faster than scraping)
+                print(f"No video found for: {item['track']}")
+            # Placeholder for affiliate link
+            # Example: item['affiliate_link'] = f"https://example.com/aff?track={urllib.parse.quote(item['track'])}"
+            print(f"Affiliate link (placeholder): {item['affiliate_link']}")
+            time.sleep(0.5)  # Delay to respect API rate limits
         except Exception as e:
-            print(f"Error searching YouTube API for '{query}': {str(e)}")
+            print(f"Error searching YouTube API for '{item['track']}': {str(e)}")
 
     # Save the data to a JSON file
     with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
