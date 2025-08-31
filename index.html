@@ -1,70 +1,107 @@
-import requests
-from bs4 import BeautifulSoup
-import json
-import os
-from datetime import datetime
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Youtube Trending Việt Nam</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="root" class="container mx-auto p-4"></div>
+    <script type="text/babel">
+        function ChartTable() {
+            const [chart, setChart] = React.useState({ chart_date: "Đang tải...", last_updated: "Đang tải...", note: "", data: [] });
+            const [error, setError] = React.useState(null);
 
-# URL of the YouTube Vietnam Daily Chart
-url = "https://kworb.net/youtube/insights/vn_daily.html"
+            React.useEffect(() => {
+                const fetchData = async (attempt = 1, maxAttempts = 3) => {
+                    try {
+                        // Add cache-busting query parameter
+                        const timestamp = new Date().getTime();
+                        const url = `./youtube_vn_daily.json?t=${timestamp}`;
+                        console.log(`Đang tải ${url}, lần thử ${attempt}`);
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        console.log('Tải dữ liệu thành công:', data);
+                        setChart(data);
+                        setError(null);
+                    } catch (err) {
+                        console.error('Lỗi tải dữ liệu:', err.message);
+                        if (attempt < maxAttempts) {
+                            console.log(`Thử lại... (${attempt + 1}/${maxAttempts})`);
+                            setTimeout(() => fetchData(attempt + 1, maxAttempts), 1000);
+                        } else {
+                            setError('Không tải được dữ liệu. Vui lòng thử lại sau.');
+                        }
+                    }
+                };
+                fetchData();
+            }, []);
 
-try:
-    # Send a GET request with headers to ensure proper encoding
-    headers = {'Accept-Language': 'en-US,en;q=0.9', 'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, timeout=10, headers=headers)
-    response.raise_for_status()  # Raise error if request fails
-    response.encoding = 'utf-8'  # Force UTF-8 encoding
-    soup = BeautifulSoup(response.text, "html.parser", from_encoding="utf-8")
+            const formatNumber = (numStr) => {
+                if (!numStr) return '';
+                const sign = numStr[0] === '-' || numStr[0] === '+' ? numStr[0] : '';
+                const num = parseInt(numStr.replace(/[+-]/, ''));
+                return sign + num.toLocaleString('vi-VN');
+            };
 
-    # Extract chart date from page title (e.g., "YouTube Vietnam Daily Chart - 2025/08/28 | Weekly")
-    title_span = soup.find("span", class_="pagetitle")
-    chart_title = title_span.find("strong").text if title_span else "YouTube Vietnam Daily Chart"
-    chart_date_raw = chart_title.split("-")[1].strip().split(" |")[0] if len(chart_title.split("-")) > 1 else "Unknown"
-    # Convert date to a readable format (e.g., "28/8/2025")
-    try:
-        chart_date = datetime.strptime(chart_date_raw, "%Y/%m/%d").strftime("%d/%m/%Y")
-    except ValueError:
-        chart_date = chart_date_raw  # Fallback if date parsing fails
+            if (error) {
+                return (
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam</h1>
+                        <p className="text-red-500">{error}</p>
+                    </div>
+                );
+            }
 
-    # Extract note (e.g., "Showing streams in the past two days.")
-    note_element = title_span.next_sibling.next_sibling  # Assuming structure: <br><br>Showing...<br><br>
-    note = note_element.strip() if note_element and "Showing" in note_element else "Hiển thị lượt nghe trong hai ngày qua."
+            return (
+                <div className="bg-white shadow-md rounded-lg p-6">
+                    <h1 className="text-2xl font-bold mb-4">Youtube Trending Việt Nam - {chart.chart_date}</h1>
+                    <p className="text-gray-600 mb-2">{chart.note}</p>
+                    <p className="text-gray-600 mb-4">Cập nhật lần cuối: {chart.last_updated}</p>
+                    {chart.data.length === 0 && !error && (
+                        <p className="text-gray-600">Đang tải dữ liệu...</p>
+                    )}
+                    {chart.data.length > 0 && (
+                        <table className="w-full border-collapse">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="p-2 text-left">VT</th>
+                                    <th className="p-2 text-left">TĐ</th>
+                                    <th className="p-2 text-left">Bài hát</th>
+                                    <th className="p-2 text-left">Lượt nghe</th>
+                                    <th className="p-2 text-left">TĐLN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {chart.data.map((item, index) => (
+                                    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+                                        <td className="p-2">{item.position}</td>
+                                        <td className="p-2">{item.position_change}</td>
+                                        <td className="p-2">{item.track}</td>
+                                        <td className="p-2">{parseInt(item.streams).toLocaleString('vi-VN')}</td>
+                                        <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '' ? 'text-gray-500' : 'text-green-500'}`}>
+                                            {formatNumber(item.streams_change)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            );
+        }
 
-    # Find the table with id="dailytable"
-    table = soup.find("table", id="dailytable")
-
-    # Initialize a list to store the chart data
-    chart_data = []
-
-    # Extract table rows (skip the header)
-    rows = table.find("tbody").find_all("tr")
-    for row in rows:
-        cols = row.find_all("td")
-        # Extract data from each column
-        position = cols[0].text.strip()
-        position_change = cols[1].text.strip()
-        track = cols[2].text.strip()
-        streams = cols[3].text.strip().replace(",", "")
-        streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else ""
-
-        # Append to chart_data
-        chart_data.append({
-            "position": position,
-            "position_change": position_change,
-            "track": track,
-            "streams": streams,
-            "streams_change": streams_change
-        })
-
-    # Save the data to a JSON file
-    with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
-        json.dump({
-            "chart_date": chart_date,
-            "last_updated": response.headers.get("Date", "Unknown"),
-            "note": note,
-            "data": chart_data
-        }, f, ensure_ascii=False, indent=2)
-
-    print("Data crawled and saved to youtube_vn_daily.json")
-except Exception as e:
-    print(f"Error during crawl: {e}")
-    # Optionally, keep old data or notify
+        ReactDOM.render(<ChartTable />, document.getElementById('root'));
+    </script>
+</body>
+</html>
