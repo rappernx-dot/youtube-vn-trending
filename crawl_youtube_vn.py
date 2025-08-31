@@ -2,20 +2,28 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+from datetime import datetime
 
 # URL of the YouTube Vietnam Daily Chart
 url = "https://kworb.net/youtube/insights/vn_daily.html"
 
 try:
-    # Send a GET request to fetch the page content
-    response = requests.get(url, timeout=10)
+    # Send a GET request with headers to ensure proper encoding
+    headers = {'Accept-Language': 'en-US,en;q=0.9', 'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, timeout=10, headers=headers)
     response.raise_for_status()  # Raise error if request fails
+    response.encoding = 'utf-8'  # Force UTF-8 encoding
     soup = BeautifulSoup(response.text, "html.parser")
 
-    # Extract chart date from page title
+    # Extract chart date from page title (e.g., "YouTube Vietnam Daily Chart - 2025/08/28 | Weekly")
     title_span = soup.find("span", class_="pagetitle")
     chart_title = title_span.find("strong").text if title_span else "YouTube Vietnam Daily Chart"
-    chart_date = chart_title.split("-")[1].strip().split(" |")[0] if len(chart_title.split("-")) > 1 else "Unknown"
+    chart_date_raw = chart_title.split("-")[1].strip().split(" |")[0] if len(chart_title.split("-")) > 1 else "Unknown"
+    # Convert date to a readable format (e.g., "28 August 2025")
+    try:
+        chart_date = datetime.strptime(chart_date_raw, "%Y/%m/%d").strftime("%d %B %Y")
+    except ValueError:
+        chart_date = chart_date_raw  # Fallback if date parsing fails
 
     # Extract note (e.g., "Showing streams in the past two days.")
     note_element = title_span.next_sibling.next_sibling  # Assuming structure: <br><br>Showing...<br><br>
@@ -36,7 +44,7 @@ try:
         position_change = cols[1].text.strip()
         track = cols[2].text.strip()
         streams = cols[3].text.strip().replace(",", "")
-        streams_change = cols[4].text.strip().replace(",", "")  # Keep as is, including sign or empty
+        streams_change = cols[4].text.strip().replace(",", "") if cols[4].text.strip() else "0"
         
         # Append to chart_data
         chart_data.append({
@@ -48,7 +56,7 @@ try:
         })
 
     # Save the data to a JSON file
-    with open("youtube_vn_daily.json", "w", encoding="utf-8") as f:
+    with open recuerdo_vn_daily.json", "w", encoding="utf-8") as f:
         json.dump({
             "chart_date": chart_date,
             "last_updated": response.headers.get("Date", "Unknown"),
