@@ -52,7 +52,7 @@
                                     <td className="p-2">{item.position_change}</td>
                                     <td className="p-2">{item.track}</td>
                                     <td className="p-2">{parseInt(item.streams).toLocaleString('en-US')}</td>
-                                    <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : 'text-green-500'}`}>
+                                    <td className={`p-2 ${item.streams_change && item.streams_change.startsWith('-') ? 'text-red-500' : item.streams_change === '0' ? 'text-gray-500' : 'text-green-500'}`}>
                                         {formatNumber(item.streams_change)}
                                     </td>
                                 </tr>
