@@ -1,6 +1,6 @@
 {
   "chart_date": "28/08/2025",
-  "last_updated": "Sun, 31 Aug 2025 04:01:20 GMT",
+  "last_updated": "Sun, 31 Aug 2025 04:23:21 GMT",
   "note": "Hiển thị lượt nghe trong hai ngày qua.",
   "data": [
     {
@@ -10,6 +10,8 @@
       "streams": "2217225",
       "streams_change": "-50883",
       "youtube_link": "https://www.youtube.com/watch?v=yHikkFeIHNA",
+      "thumbnail_url": "https://i.ytimg.com/vi/yHikkFeIHNA/hqdefault.jpg",
+      "view_count": "9811624",
       "affiliate_link": ""
     },
     {
@@ -19,6 +21,8 @@
       "streams": "2058733",
       "streams_change": "+89735",
       "youtube_link": "https://www.youtube.com/watch?v=-nJ0WHEetsQ",
+      "thumbnail_url": "https://i.ytimg.com/vi/-nJ0WHEetsQ/hqdefault.jpg",
+      "view_count": "11754168",
       "affiliate_link": ""
     },
     {
@@ -28,6 +32,8 @@
       "streams": "1883633",
       "streams_change": "-3703",
       "youtube_link": "https://www.youtube.com/watch?v=sZrIbpwjTwk",
+      "thumbnail_url": "https://i.ytimg.com/vi/sZrIbpwjTwk/hqdefault.jpg",
+      "view_count": "11428485",
       "affiliate_link": ""
     },
     {
@@ -37,6 +43,8 @@
       "streams": "1338720",
       "streams_change": "+331182",
       "youtube_link": "https://www.youtube.com/watch?v=0kBL7n_Yxak",
+      "thumbnail_url": "https://i.ytimg.com/vi/0kBL7n_Yxak/hqdefault.jpg",
+      "view_count": "40403028",
       "affiliate_link": ""
     },
     {
@@ -46,6 +54,8 @@
       "streams": "1196699",
       "streams_change": "+388",
       "youtube_link": "https://www.youtube.com/watch?v=nVOgLUHhfGA",
+      "thumbnail_url": "https://i.ytimg.com/vi/nVOgLUHhfGA/hqdefault.jpg",
+      "view_count": "10688325",
       "affiliate_link": ""
     },
     {
@@ -55,6 +65,8 @@
       "streams": "931767",
       "streams_change": "-32101",
       "youtube_link": "https://www.youtube.com/watch?v=VAsWu5NqGnE",
+      "thumbnail_url": "https://i.ytimg.com/vi/VAsWu5NqGnE/hqdefault.jpg",
+      "view_count": "14481369",
       "affiliate_link": ""
     },
     {
@@ -64,6 +76,8 @@
       "streams": "719613",
       "streams_change": "-30429",
       "youtube_link": "https://www.youtube.com/watch?v=74Kv5W9c8dE",
+      "thumbnail_url": "https://i.ytimg.com/vi/74Kv5W9c8dE/hqdefault.jpg",
+      "view_count": "15348045",
       "affiliate_link": ""
     },
     {
@@ -73,6 +87,8 @@
       "streams": "682837",
       "streams_change": "+40601",
       "youtube_link": "https://www.youtube.com/watch?v=tF5z8kkbzXk",
+      "thumbnail_url": "https://i.ytimg.com/vi/tF5z8kkbzXk/hqdefault.jpg",
+      "view_count": "1085256",
       "affiliate_link": ""
     },
     {
@@ -82,6 +98,8 @@
       "streams": "636812",
       "streams_change": "-248019",
       "youtube_link": "https://www.youtube.com/watch?v=vz-_ZtUh8P4",
+      "thumbnail_url": "https://i.ytimg.com/vi/vz-_ZtUh8P4/hqdefault.jpg",
+      "view_count": "39896072",
       "affiliate_link": ""
     },
     {
@@ -91,6 +109,8 @@
       "streams": "631961",
       "streams_change": "+1195",
       "youtube_link": "https://www.youtube.com/watch?v=jPjQJYKhhk4",
+      "thumbnail_url": "https://i.ytimg.com/vi/jPjQJYKhhk4/hqdefault.jpg",
+      "view_count": "50141012",
       "affiliate_link": ""
     },
     {
@@ -100,6 +120,8 @@
       "streams": "625334",
       "streams_change": "-1323",
       "youtube_link": "https://www.youtube.com/watch?v=CL13X-8o4h0",
+      "thumbnail_url": "https://i.ytimg.com/vi/CL13X-8o4h0/hqdefault.jpg",
+      "view_count": "255976473",
       "affiliate_link": ""
     },
     {
@@ -109,6 +131,8 @@
       "streams": "518360",
       "streams_change": "+19310",
       "youtube_link": "https://www.youtube.com/watch?v=hIckaxEcez0",
+      "thumbnail_url": "https://i.ytimg.com/vi/hIckaxEcez0/hqdefault.jpg",
+      "view_count": "305213",
       "affiliate_link": ""
     },
     {
@@ -118,6 +142,8 @@
       "streams": "512603",
       "streams_change": "+57761",
       "youtube_link": "https://www.youtube.com/watch?v=v3hnIpPZT7E",
+      "thumbnail_url": "https://i.ytimg.com/vi/v3hnIpPZT7E/hqdefault.jpg",
+      "view_count": "353063",
       "affiliate_link": ""
     },
     {
@@ -127,6 +153,8 @@
       "streams": "494550",
       "streams_change": "+838",
       "youtube_link": "https://www.youtube.com/watch?v=stvWuowo1dU",
+      "thumbnail_url": "https://i.ytimg.com/vi/stvWuowo1dU/hqdefault.jpg",
+      "view_count": "65548499",
       "affiliate_link": ""
     },
     {
@@ -136,6 +164,8 @@
       "streams": "490658",
       "streams_change": "+1517",
       "youtube_link": "https://www.youtube.com/watch?v=zloQza64-sM",
+      "thumbnail_url": "https://i.ytimg.com/vi/zloQza64-sM/hqdefault.jpg",
+      "view_count": "3245437",
       "affiliate_link": ""
     },
     {
@@ -145,6 +175,8 @@
       "streams": "417460",
       "streams_change": "-100267",
       "youtube_link": "https://www.youtube.com/watch?v=xBv4Ne67QcM",
+      "thumbnail_url": "https://i.ytimg.com/vi/xBv4Ne67QcM/hqdefault.jpg",
+      "view_count": "200949",
       "affiliate_link": ""
     },
     {
@@ -154,6 +186,8 @@
       "streams": "377099",
       "streams_change": "+7476",
       "youtube_link": "https://www.youtube.com/watch?v=yebNIHKAC4A",
+      "thumbnail_url": "https://i.ytimg.com/vi/yebNIHKAC4A/hqdefault.jpg",
+      "view_count": "261269216",
       "affiliate_link": ""
     },
     {
@@ -163,6 +197,8 @@
       "streams": "333318",
       "streams_change": "",
       "youtube_link": "https://www.youtube.com/watch?v=1py-w6qRUdM",
+      "thumbnail_url": "https://i.ytimg.com/vi/1py-w6qRUdM/hqdefault.jpg",
+      "view_count": "21602263",
       "affiliate_link": ""
     },
     {
@@ -172,6 +208,8 @@
       "streams": "332332",
       "streams_change": "-10225",
       "youtube_link": "https://www.youtube.com/watch?v=CsCgX0Cm44g",
+      "thumbnail_url": "https://i.ytimg.com/vi/CsCgX0Cm44g/hqdefault.jpg",
+      "view_count": "13872253",
       "affiliate_link": ""
     },
     {
@@ -181,6 +219,8 @@
       "streams": "331084",
       "streams_change": "",
       "youtube_link": "",
+      "thumbnail_url": "",
+      "view_count": "",
       "affiliate_link": ""
     }
   ]
