@@ -1,5 +1,7 @@
 {
-  "last_updated": "Sun, 31 Aug 2025 03:03:46 GMT",
+  "chart_date": "2025/08/28",
+  "last_updated": "Sun, 31 Aug 2025 03:09:16 GMT",
+  "note": "Showing streams in the past two days.",
   "data": [
     {
       "position": "1",
@@ -125,7 +127,7 @@
       "position_change": "NEW",
       "track": "EM XINH \"SAY HI\" - GÃ SÄN CÃ",
       "streams": "333318",
-      "streams_change": "0"
+      "streams_change": ""
     },
     {
       "position": "19",
@@ -139,7 +141,7 @@
       "position_change": "NEW",
       "track": "Pháº¡m Ká»³ - Anh Vui (Remix) (feat. H2O Vinahouse & Natas Remix)",
       "streams": "331084",
-      "streams_change": "0"
+      "streams_change": ""
     }
   ]
 }
